@@ -1,4 +1,3 @@
-dataset/
 model.pkl
 tfidf.pkl
 confusion_matrix.png
