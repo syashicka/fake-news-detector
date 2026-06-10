@@ -1,0 +1,6 @@
+dataset/
+model.pkl
+tfidf.pkl
+confusion_matrix.png
+__pycache__/
+*.pyc
