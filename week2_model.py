@@ -6,10 +6,10 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.metrics import accuracy_score
 import pickle
 
-# ── STEP 1: Load cleaned data ────────────────────────────────
+#Load cleaned data
 df = pd.read_csv('dataset/cleaned_news.csv')
 
-# Drop any empty rows
+# Drop empty rows
 df.dropna(inplace=True)
 
 X = df['cleaned']   # input  → the news text
@@ -19,9 +19,7 @@ print(f"✅ Data loaded: {len(df)} articles")
 print()
 
 
-# ── STEP 2: Split into Train & Test sets ─────────────────────
-# 80% for training, 20% for testing
-# random_state=42 just means results are reproducible
+# Split into Train & Test sets
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
@@ -31,9 +29,7 @@ print(f"📊 Testing set  : {len(X_test)} articles")
 print()
 
 
-# ── STEP 3: TF-IDF Vectorizer ────────────────────────────────
-# Converts words → numbers the model can understand
-# max_features=5000 means we only keep the 5000 most important words
+#TF-IDF Vectorizer
 
 print("🔢 Converting text to numbers using TF-IDF...")
 tfidf = TfidfVectorizer(max_features=5000)
@@ -45,7 +41,7 @@ print("✅ TF-IDF done!")
 print()
 
 
-# ── STEP 4: Train Model 1 — Logistic Regression ──────────────
+# Logistic Regression 
 print("🤖 Training Logistic Regression...")
 lr_model = LogisticRegression(max_iter=1000)
 lr_model.fit(X_train_tfidf, y_train)
@@ -55,8 +51,7 @@ print(f"   Accuracy: {lr_acc * 100:.2f}%")
 print()
 
 
-# ── STEP 5: Train Model 2 — Passive Aggressive Classifier ────
-# This model is great for text classification — fast and accurate
+#  Passive Aggressive Classifier 
 print("🤖 Training Passive Aggressive Classifier...")
 pa_model = PassiveAggressiveClassifier(max_iter=1000)
 pa_model.fit(X_train_tfidf, y_train)
@@ -66,14 +61,12 @@ print(f"   Accuracy: {pa_acc * 100:.2f}%")
 print()
 
 
-# ── STEP 6: Pick the best model & save ───────────────────────
+#Pick the best model
 best_model = lr_model if lr_acc >= pa_acc else pa_model
 best_name  = "Logistic Regression" if lr_acc >= pa_acc else "Passive Aggressive"
 print(f"🏆 Best model: {best_name} ({max(lr_acc, pa_acc)*100:.2f}% accuracy)")
 print()
 
-# Save both the model and the vectorizer using pickle
-# (We need the vectorizer later to convert user input too)
 with open('model.pkl',  'wb') as f: pickle.dump(best_model, f)
 with open('tfidf.pkl',  'wb') as f: pickle.dump(tfidf, f)
 

@@ -9,14 +9,14 @@ from sklearn.metrics import (
     confusion_matrix, classification_report
 )
 
-# ── STEP 1: Load saved model & vectorizer ────────────────────
+#Load saved model & vectorizer
 with open('model.pkl', 'rb') as f: model = pickle.load(f)
 with open('tfidf.pkl', 'rb') as f: tfidf = pickle.load(f)
 
 print("✅ Model and vectorizer loaded!")
 print()
 
-# ── STEP 2: Load data & recreate test set ────────────────────
+#Load data & recreate test set
 df = pd.read_csv('dataset/cleaned_news.csv').dropna()
 X = df['cleaned']
 y = df['label']
@@ -26,7 +26,7 @@ X_test_tfidf = tfidf.transform(X_test)
 y_pred = model.predict(X_test_tfidf)
 
 
-# ── STEP 3: Print all evaluation metrics ─────────────────────
+# Print evaluation metrics
 acc  = accuracy_score(y_test, y_pred)
 prec = precision_score(y_test, y_pred)
 rec  = recall_score(y_test, y_pred)
@@ -42,8 +42,7 @@ print("📋 Full Classification Report:")
 print(classification_report(y_test, y_pred, target_names=['Fake', 'Real']))
 
 
-# ── STEP 4: Plot Confusion Matrix ────────────────────────────
-# Shows: how many it got right vs wrong for each class
+# Confusion Matrix
 cm = confusion_matrix(y_test, y_pred)
 
 plt.figure(figsize=(6, 5))
@@ -62,7 +61,6 @@ print("💾 Confusion matrix saved as confusion_matrix.png")
 print()
 
 
-# ── STEP 5: What does the confusion matrix mean? ─────────────
 tn, fp, fn, tp = cm.ravel()
 print("🔍 Breaking it down:")
 print(f"   ✅ Correctly identified FAKE news  : {tn}")
